@@ -13,10 +13,6 @@ import (
 func TestNewPoint(t *testing.T) {
 	p := NewPoint(40.5, 120.5)
 
-	if p == nil {
-		t.Error("Expected to get a pointer to a new point, but got nil instead.")
-	}
-
 	if p.lat != 40.5 {
 		t.Errorf("Expected to be able to specify 40.5 as the lat value of a new point, but got %f instead", p.lat)
 	}
@@ -51,8 +47,8 @@ func TestLng(t *testing.T) {
 // Seems brittle :\
 func TestGreatCircleDistance(t *testing.T) {
 	// Test that SEA and SFO are ~ 1091km apart, accurate to 100 meters.
-	sea := &Point{lat: 47.4489, lng: -122.3094}
-	sfo := &Point{lat: 37.6160933, lng: -122.3924223}
+	sea := Point{lat: 47.4489, lng: -122.3094}
+	sfo := Point{lat: 37.6160933, lng: -122.3924223}
 	sfoToSea := 1093.379199082169
 
 	dist := sea.GreatCircleDistance(sfo)
@@ -63,7 +59,7 @@ func TestGreatCircleDistance(t *testing.T) {
 }
 
 func TestPointAtDistanceAndBearing(t *testing.T) {
-	sea := &Point{lat: 47.44745785, lng: -122.308065668024}
+	sea := Point{lat: 47.44745785, lng: -122.308065668024}
 	p := sea.PointAtDistanceAndBearing(1090.7, 180)
 
 	// Expected results of transposing point
@@ -79,8 +75,8 @@ func TestPointAtDistanceAndBearing(t *testing.T) {
 }
 
 func TestBearingTo(t *testing.T) {
-	p1 := &Point{lat: 40.7486, lng: -73.9864}
-	p2 := &Point{lat: 0.0, lng: 0.0}
+	p1 := Point{lat: 40.7486, lng: -73.9864}
+	p2 := Point{lat: 0.0, lng: 0.0}
 	bearing := p1.BearingTo(p2)
 
 	// Expected bearing 60 degrees
@@ -93,8 +89,8 @@ func TestBearingTo(t *testing.T) {
 }
 
 func TestMidpointTo(t *testing.T) {
-	p1 := &Point{lat: 52.205, lng: 0.119}
-	p2 := &Point{lat: 48.857, lng: 2.351}
+	p1 := Point{lat: 52.205, lng: 0.119}
+	p2 := Point{lat: 48.857, lng: 2.351}
 
 	p := p1.MidpointTo(p2)
 
@@ -120,14 +116,14 @@ func TestMarshalJSON(t *testing.T) {
 	}
 
 	if string(res) != `{"lat":40.7486,"lng":-73.9864}` {
-		t.Error("Point should correctly Marshal to JSON")
+		t.Errorf("Point should correctly Marshal to JSON: %s", res)
 	}
 }
 
 // Ensures that a point can be unmarhalled from JSON
 func TestUnmarshalJSON(t *testing.T) {
 	data := []byte(`{"lat":40.7486,"lng":-73.9864}`)
-	p := &Point{}
+	p := Point{}
 	err := p.UnmarshalJSON(data)
 
 	if err != nil {
@@ -166,7 +162,7 @@ func TestUnmarshalBinary(t *testing.T) {
 		t.Error("Unable to convert coordinates to bytes slice.", err)
 	}
 
-	actual := &Point{}
+	actual := Point{}
 	err = actual.UnmarshalBinary(coordinates)
 	if err != nil {
 		t.Error("Should not encounter an error when attempting to Unmarshal a Point from binary", err)
@@ -192,7 +188,7 @@ func coordinatesToBytes(lat, long float64) ([]byte, error) {
 
 // Asserts true when the latitude and longtitude of p1 and p2 are equal up to a certain number of decimal places.
 // Precision is used to define that number of decimal places.
-func assertPointsEqual(p1, p2 *Point, precision int) bool {
+func assertPointsEqual(p1, p2 Point, precision int) bool {
 	roundedLat1, roundedLng1 := int(p1.lat*float64(precision))/precision, int(p1.lng*float64(precision))/precision
 	roundedLat2, roundedLng2 := int(p2.lat*float64(precision))/precision, int(p2.lng*float64(precision))/precision
 	return roundedLat1 == roundedLat2 && roundedLng1 == roundedLng2

@@ -15,7 +15,7 @@ func TestPointInPolygon(t *testing.T) {
 	}
 
 	point := Point{lng: 114.9480600, lat: 4.9402900}
-	if !brunei.Contains(&point) {
+	if !brunei.Contains(point) {
 		t.Error("Expected the capital of Brunei to be in Brunei, but it wasn't.")
 	}
 }
@@ -57,8 +57,8 @@ func TestPointInPolygonWithHole(t *testing.T) {
 
 	// Look at two contours
 	canberra := Point{lng: 149.128684300000030000, lat: -35.2819998}
-	isnsw := nsw.Contains(&canberra)
-	isact := act.Contains(&canberra)
+	isnsw := nsw.Contains(canberra)
+	isact := act.Contains(canberra)
 	if !isnsw && !isact {
 		t.Error("Canberra should be in NSW and also in the sub-contour ACT state")
 	}
@@ -73,19 +73,19 @@ func TestPointInPolygonWithHole(t *testing.T) {
 		nswmulti.Add(p)
 	}
 
-	isnsw = nswmulti.Contains(&canberra)
+	isnsw = nswmulti.Contains(canberra)
 	if isnsw {
 		t.Error("Canberra should not be in NSW as it falls in the donut contour of the ACT")
 	}
 
 	sydney := Point{lng: 151.209, lat: -33.866}
 
-	if !nswmulti.Contains(&sydney) {
+	if !nswmulti.Contains(sydney) {
 		t.Error("Sydney should be in NSW")
 	}
 
 	losangeles := Point{lng: 118.28333, lat: 34.01667}
-	isnsw = nswmulti.Contains(&losangeles)
+	isnsw = nswmulti.Contains(losangeles)
 
 	if isnsw {
 		t.Error("Los Angeles should not be in NSW")
@@ -131,7 +131,7 @@ func TestEquatorGreenwichContains(t *testing.T) {
 // A test struct used to encapsulate and
 // Unmarshal JSON into.
 type testPoints struct {
-	Points []*Point
+	Points []Point
 }
 
 // Opens a JSON file and unmarshals the data into a Polygon
