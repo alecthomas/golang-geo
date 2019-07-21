@@ -18,6 +18,13 @@
 
 ## what 
 
+<hr/>
+
+**NOTE:** This is a stripped down fork of [kellydunn/golang-geo](https://github.com/kellydunn/golang-geo). It removes all API and DB related code,
+leaving just the functionality that deals with geo points, polygons, distances, etc.
+
+<hr/>
+
 This library provides convenience functions for translating, geocoding, and calculating distances between geographical points.  It is inspired by ruby's `geokit` and `geokit-rails` gems, and aims to make working with geographical data a little bit easier in golang.
 
 ## documentation
